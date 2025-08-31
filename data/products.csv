@@ -1,0 +1,6 @@
+sku,name,category,price,stock,warehouse,avg_daily_sales,reorder_point,reorder_qty,supplier_id
+IP-COVER-BLK,iPhone Cover (Black),Accessories,1200,2,Karachi,7,8,100,SUP-A
+SW-CORE,Smartwatch Core,Wearables,9500,19,Lahore,3,6,30,SUP-B
+IN-CABLE-FAST,Infinix Fast Cable,Cables,800,51,Karachi,12,25,150,SUP-A
+SM-CHARGER-25W,Samsung Charger 25W,Chargers,3800,5,Lahore,5,10,60,SUP-C
+SM-M20-COVER,Samsung M20 Cover,Accessories,900,38,Karachi,1,5,20,SUP-B

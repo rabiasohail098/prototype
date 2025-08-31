@@ -1,0 +1,7 @@
+order_id,date,city,sku,qty,status,courier,tracking
+1242,2025-08-30,Lahore,IP-COVER-BLK,3,Packed,TCS,TCS-98711
+1243,2025-08-30,Karachi,IN-CABLE-FAST,2,Shipped,Leopards,LEO-55142
+1244,2025-08-31,Lahore,SM-CHARGER-25W,1,Shipped,TCS,TCS-63188
+1245,2025-08-31,Karachi,IN-CABLE-FAST,4,Shipped,TCS,TCS-94574
+1246,2025-08-31,Karachi,SW-CORE,1,Shipped,TCS,TCS-86902
+1247,2025-08-31,Lahore,IP-COVER-BLK,2,Shipped,TCS,TCS-53558

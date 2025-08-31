@@ -1,0 +1,4 @@
+supplier_id,name,country,lead_time_days,min_order_qty,contact
+SUP-A,Alpha Mobile Parts,China,3,50,alpha@suppliers.com
+SUP-B,Blue Gulf Traders,UAE,5,30,sales@bluegulf.ae
+SUP-C,CoreTech Wholesale,China,4,40,hello@coretech.cn

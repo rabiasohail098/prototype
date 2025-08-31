@@ -1,0 +1,16 @@
+{
+  "business_name": "Luxemart",
+  "owner_name": "Abbas",
+  "auto_reorder": true,
+  "couriers": [
+    "TCS",
+    "Leopards",
+    "BlueEx"
+  ],
+  "sla_days": 3,
+  "risk_regions": [
+    "Hyderabad"
+  ],
+  "notify_email": "owner@luxemart.pk",
+  "notify_phone": "+92-3XX-XXXXXXX"
+}

@@ -1,0 +1,5 @@
+shipment_id,supplier_id,eta,status,sku,qty
+SHP-1001,SUP-A,2025-09-03,On the way,IN-CABLE-FAST,150
+SHP-1002,SUP-C,2025-09-02,Delay risk: weather in port,SM-CHARGER-25W,60
+SHP-1785,SUP-A,2025-09-03,Ordered,IP-COVER-BLK,100
+SHP-9859,SUP-C,2025-09-04,Ordered,SM-CHARGER-25W,60
