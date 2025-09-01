@@ -1,5 +1,30 @@
-streamlit
-gTTS
-pydub
-simpleaudio
-SpeechRecognition
+# Core Streamlit Framework
+streamlit>=1.28.0
+
+# Data Processing & Analysis
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualization & Charts
+plotly>=5.15.0
+
+# Image Processing
+Pillow>=10.0.0
+
+# Date & Time Operations
+python-dateutil>=2.8.0
+
+# Optional: Enhanced Features (uncomment if needed)
+# requests>=2.31.0          # For API calls to suppliers
+# sqlalchemy>=2.0.0         # For database integration
+# opencv-python>=4.8.0      # For advanced image processing
+# speechrecognition>=3.10.0 # For voice support
+# pyttsx3>=2.90            # For text-to-speech
+# streamlit-webrtc>=0.47.0  # For real-time voice chat
+# streamlit-aggrid>=0.3.4   # For advanced data grids
+# streamlit-option-menu>=0.3.6  # For better navigation
+
+# Development & Testing (optional)
+# pytest>=7.4.0
+# black>=23.7.0
+# flake8>=6.0.0
