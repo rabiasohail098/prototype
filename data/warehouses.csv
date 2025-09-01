@@ -1,3 +1,5 @@
-name,temp_c,humidity,capacity
-Karachi,25,55,5000
-Lahore,26,58,3000
+name,temp_c,humidity,capacity,lat,lon
+Karachi,25,55,5000,24.8607,67.0011
+Lahore,26,58,3000,31.5204,74.3587
+Hyderabad,28,70,1500,25.3924,68.3737
+Islamabad,23,50,2000,33.6844,73.0479
