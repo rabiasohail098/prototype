@@ -212,7 +212,7 @@ st.markdown("""
     }
     
     /* Sidebar Enhancements */
-    .css-1d391kg {
+    .css-1d391kg { /* This might vary, target sidebar directly if possible */
         background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
     }
     
@@ -366,7 +366,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state (keeping all the original functionality)
+# Initialize session state
 if 'inventory' not in st.session_state:
     st.session_state.inventory = pd.DataFrame({
         'Product': ['iPhone 15 Cover', 'Samsung Charger', 'Infinix Cable', 'Realme C51', 'iPhone Charger', 'Samsung Cover'],
@@ -377,6 +377,21 @@ if 'inventory' not in st.session_state:
         'Supplier': ['Supplier A', 'Supplier B', 'Supplier C', 'Supplier C', 'Supplier A', 'Supplier B'],
         'Category': ['Accessories', 'Accessories', 'Accessories', 'Mobile', 'Accessories', 'Accessories']
     })
+
+# --- FIXED: Initialize search_results, show_search_analytics, search_history, chat_messages, and last_input ---
+if 'search_results' not in st.session_state:
+    st.session_state.search_results = pd.DataFrame() # Initialize as an empty DataFrame
+if 'show_search_analytics' not in st.session_state:
+    st.session_state.show_search_analytics = False
+if 'search_history' not in st.session_state: 
+    st.session_state.search_history = []
+if 'chat_messages' not in st.session_state:
+    st.session_state.chat_messages = [
+        {"role": "assistant", "content": "🙋‍♂️ Assalam-o-Alaikum! Main **Luxemart** ka AI Support Agent hun. \n\n📱 Main aap ki madad kar sakta hun:\n• Order tracking\n• Product information  \n• Delivery status\n• Returns & complaints\n• Price inquiries\n\nAap kya janna chahte hain?", "timestamp": datetime.now().strftime('%H:%M')}
+    ]
+if 'last_input' not in st.session_state: 
+    st.session_state.last_input = None
+# --- END FIX ---
 
 if 'orders' not in st.session_state:
     st.session_state.orders = []
@@ -697,6 +712,10 @@ with tab2:
             # Apply text search
             if advanced_search:
                 search_results = search_products(advanced_search)
+                # Add to history only if a search query was actually entered
+                if advanced_search not in st.session_state.search_history:
+                    st.session_state.search_history.insert(0, advanced_search) # Add to front
+                    st.session_state.search_history = st.session_state.search_history[:5] # Keep last 5
             
             # Apply category filter
             if search_category != "All Categories":
@@ -723,6 +742,7 @@ with tab2:
         
         if st.button("🔄 Reset Filters", use_container_width=True):
             st.session_state.search_results = pd.DataFrame()
+            st.session_state.show_search_analytics = False
             st.rerun()
         
         if st.button("📊 Search Analytics", use_container_width=True):
@@ -748,13 +768,18 @@ with tab2:
                     search_results = st.session_state.inventory[
                         st.session_state.inventory['Stock'] < st.session_state.inventory['Min_Stock']
                     ]
+                    st.session_state.search_history.insert(0, "Low Stock Items")
                 elif search_term == "under_5k":
                     search_results = st.session_state.inventory[st.session_state.inventory['Price'] < 5000]
+                    st.session_state.search_history.insert(0, "Products Under 5K")
                 elif search_term == "best_sellers":
                     search_results = st.session_state.inventory.nlargest(5, 'Daily_Sales')
+                    st.session_state.search_history.insert(0, "Best Sellers")
                 else:
                     search_results = search_products(search_term)
+                    st.session_state.search_history.insert(0, f"'{search_term}'")
                 
+                st.session_state.search_history = st.session_state.search_history[:5] # Keep last 5
                 st.session_state.search_results = search_results
                 st.rerun()
     
@@ -826,43 +851,45 @@ with tab2:
         
         with action_cols[4]:
             if st.button("📈 Visual Analysis", key="visual_analysis"):
-                # Show visual analysis of search results
-                st.markdown("#### 📊 Search Results Visualization")
-                
-                viz_col1, viz_col2 = st.columns(2)
-                
-                with viz_col1:
-                    # Stock status pie chart
-                    status_counts = results_display['Stock_Status'].value_counts()
-                    fig_status = px.pie(
-                        values=status_counts.values,
-                        names=status_counts.index,
-                        title="Stock Status Distribution"
-                    )
-                    st.plotly_chart(fig_status, use_container_width=True)
-                
-                with viz_col2:
-                    # Price distribution bar chart
-                    fig_price = px.bar(
-                        results_display.head(10),
-                        x='Product',
-                        y='Price',
-                        title="Price Comparison (Top 10)",
-                        color='Price'
-                    )
-                    fig_price.update_layout(xaxis_tickangle=-45)
-                    st.plotly_chart(fig_price, use_container_width=True)
+                st.session_state.show_search_analytics = True # Set flag to show analytics
     
-    # Search History and Suggestions
-    if 'search_history' not in st.session_state:
-        st.session_state.search_history = []
+    # Show Search Analytics if flag is true
+    if st.session_state.show_search_analytics:
+        st.markdown("#### 📊 Search Results Visualization")
+        
+        viz_col1, viz_col2 = st.columns(2)
+        
+        with viz_col1:
+            # Stock status pie chart
+            status_counts = results_display['Stock_Status'].value_counts() # type: ignore
+            fig_status = px.pie(
+                values=status_counts.values,
+                names=status_counts.index,
+                title="Stock Status Distribution"
+            )
+            st.plotly_chart(fig_status, use_container_width=True)
+        
+        with viz_col2:
+            # Price distribution bar chart
+            fig_price = px.bar(
+                results_display.head(10), # type: ignore
+                x='Product',
+                y='Price',
+                title="Price Comparison (Top 10)",
+                color='Price'
+            )
+            fig_price.update_layout(xaxis_tickangle=-45)
+            st.plotly_chart(fig_price, use_container_width=True)
     
+    # Search History
     st.markdown("---")
     st.markdown("### 🕘 Search History")
-    for query in st.session_state.search_history:
-        st.markdown(f"🔍 {query}")
-        st.session_state.search_history.append(query)
-        st.session_state.search_history = list(set(st.session_state.search_history))
+    if st.session_state.search_history:
+        for i, query in enumerate(st.session_state.search_history):
+            st.markdown(f"🔍 {i+1}. {query}")
+    else:
+        st.info("No search history yet.")
+
 
 with tab3:
     st.markdown("## 🚚 Orders & Logistics Management")
@@ -1033,11 +1060,7 @@ with tab4:
 with tab5:
     st.markdown("## 🗣️ Customer Support AI Assistant")
     
-    # Initialize chat history if not exists
-    if 'chat_messages' not in st.session_state:
-        st.session_state.chat_messages = [
-            {"role": "assistant", "content": "🙋‍♂️ Assalam-o-Alaikum! Main **Luxemart** ka AI Support Agent hun. \n\n📱 Main aap ki madad kar sakta hun:\n• Order tracking\n• Product information  \n• Delivery status\n• Returns & complaints\n• Price inquiries\n\nAap kya janna chahte hain?", "timestamp": datetime.now().strftime('%H:%M')}
-        ]
+    # chat_messages initialized at the top now
     
     # Helper function for intelligent responses
     def get_ai_response(user_message):
@@ -1131,7 +1154,7 @@ with tab5:
             send_clicked = st.button("📤 Send", use_container_width=True)
         
         # Process user input
-        if (send_clicked and user_input) or (user_input and st.session_state.get('last_input') != user_input):
+        if (send_clicked and user_input) or (user_input and st.session_state.get('last_input') != user_input and user_input.strip() != ''): # Added check for empty string
             if user_input.strip():
                 # Add user message
                 timestamp = datetime.now().strftime('%H:%M')
